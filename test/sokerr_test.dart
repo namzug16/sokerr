@@ -44,16 +44,26 @@ void main() {
 
   group('FutureResult Extension Tests', () {
     test('Future completes normally and returns Ok', () async {
-      final future = Future.value(55);
-      final result = await future.result();
+      Future<int> future() async => 55;
+      final result = await future().result();
       expect(result.isOk, isTrue);
       expect(result.unwrap, equals(55));
     });
 
     test('Future completes with error and returns Err', () async {
       final error = Exception('future error');
-      final future = Future<int>.error(error);
-      final result = await future.result();
+      Future<int> future() async => throw error;
+      final result = await future().result();
+      expect(result.isErr, isTrue);
+      expect(result.unwrapErr, equals(error));
+    });
+  });
+
+  group('FunctionResult Extension Tests', () {
+    test('Function throws an Exception', () async {
+      final error = Exception('future error');
+      int fn() => throw error;
+      final result = fn.result();
       expect(result.isErr, isTrue);
       expect(result.unwrapErr, equals(error));
     });

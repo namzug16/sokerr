@@ -32,14 +32,11 @@ Future<Result<(), String>> updateTable() async {
 }
 ```
 
-Wrap a function
+Wrap a Future (extension)
 
 ```dart
 Future<Result<String, Object?>> mySafeFunction() async {
-  /// With the result extension you can wrap any
-  /// synchronous or asynchronous function and capture the
-  /// exceptions thrown by it and the value returned
-  final res = await unsafeFunctionFromAPackageIDidNotWrite().result();
+  final res = await unsafeFutureFromAPackageIDidNotWrite().result();
 
   ...
 
@@ -53,6 +50,16 @@ Future<Result<String, Object?>> mySafeFunction() async {
 }
 ```
 
+Wrap a Function (extension)
+
+```dart
+void main() {
+  /// JWT's constructor throws an exception when the token has expired
+  final res = (() => JWT.verify(token, SecretKey(secret))).result();
+  ...
+}
+```
+
 How can I map a result?
 
 ```dart
@@ -61,6 +68,6 @@ void main() {
 
   final orElse = "orElse";
 
-  final mappedValue = switch (res) { Ok(:final ok) => ok.myVal, Err() => orElse };
+  final String mappedValue = switch (res) { Ok(:final ok) => ok.myVal, Err() => orElse };
 }
 ```
